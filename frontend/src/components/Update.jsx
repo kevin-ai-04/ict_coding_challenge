@@ -1,31 +1,44 @@
 import { Box, Button, TextField } from "@mui/material";
-import  { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const Add = () => {
+const Update = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  var [inputs, setInputs] = useState({
+  const [inputs, setInputs] = useState({
     EmpName: "",
     designation: "",
-    empId:"",
+    empId: "",
     img_url: ""
   });
+
+  // Fetch current data
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3001/get/${id}`)
+      .then((res) => setInputs(res.data))
+      .catch((err) => console.log(err));
+  }, [id]);
+
+
   const inputHandler = (e) => {
-    console.log(e.target.value);
     setInputs({ ...inputs, [e.target.name]: e.target.value });
-    console.log("in",inputs);
   };
-  const addData = () => {
-    axios.post("http://localhost:3001/add", inputs)
+
+
+  const updateData = () => {
+    axios
+      .put(`http://localhost:3001/update/${id}`, inputs)
       .then((response) => {
-        console.log("Data added successfully", response);
-        navigate("/"); // Redirect to home page or another page after submission
+        console.log("Data updated successfully", response);
+        navigate("/"); 
       })
       .catch((error) => {
-        console.error("There was an error adding the employee data!", error);
+        console.error("There was an error updating the employee data!", error);
       });
   };
+
   return (
     <div>
       <div>
@@ -52,7 +65,7 @@ const Add = () => {
               placeholder="Employee Name"
               onChange={inputHandler}
               name="EmpName"
-              value={inputs.title}
+              value={inputs.EmpName}
               fullWidth
             />
             <TextField
@@ -64,7 +77,7 @@ const Add = () => {
               multiline
               rows={1}
             />
-             <TextField
+            <TextField
               variant="outlined"
               placeholder="Employee Id"
               onChange={inputHandler}
@@ -73,15 +86,13 @@ const Add = () => {
             />
             <TextField
               variant="outlined"
-              placeholder="Photo(paste any link from the browser)"
+              placeholder="Photo (paste any link from the browser)"
               onChange={inputHandler}
               name="img_url"
               value={inputs.img_url}
             />
-           
-
-            <Button variant="contained" color="secondary" onClick={addData}>
-              Submit
+            <Button variant="contained" color="secondary" onClick={updateData}>
+              Update
             </Button>
           </Box>
         </Box>
@@ -90,4 +101,4 @@ const Add = () => {
   );
 };
 
-export default Add;
+export default Update;

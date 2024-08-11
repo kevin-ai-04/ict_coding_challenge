@@ -1,10 +1,10 @@
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import { Link } from 'react-router-dom';
 
 function Navbar() {
   return (
@@ -13,8 +13,12 @@ function Navbar() {
         <Typography variant="h6" style={{ flexGrow: 1 }}>
           EmployeeApp
         </Typography>
-        <Button color="inherit" component={Link} to="/">Home</Button>
-        <Button color="inherit" component={Link} to="/add">Add</Button>
+        <IconButton color="inherit" component={Link} to="/" aria-label="home">
+          <HomeIcon />
+        </IconButton>
+        <IconButton color="inherit" component={Link} to="/add" aria-label="add">
+          <AddBoxIcon />
+        </IconButton>
       </Toolbar>
     </AppBar>
   );

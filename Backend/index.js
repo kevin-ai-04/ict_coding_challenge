@@ -8,7 +8,6 @@ app.use(cors());
 require("./connection");
 
 const employeeModel = require('./model');
-//Write missing code here //done?
 
 app.post("/add", async (req, res) => {
   try {
@@ -20,7 +19,6 @@ app.post("/add", async (req, res) => {
   }
 });
 
-// Write GET API Code
 //GET Code
 app.get('/get', async (req, res) => {
   console.log('Fetching all employees');
@@ -30,6 +28,46 @@ app.get('/get', async (req, res) => {
   } catch (error) {
       console.error('Error fetching users:', error);
       res.status(500).send('Internal Server Error');
+  }
+});
+
+// Fetch employee by ID
+app.get('/get/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const data = await employeeModel.findById(id);
+    if (!data) {
+      return res.status(404).send('Employee not found');
+    }
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching employee:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+// Update
+app.put('/update/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await employeeModel.findByIdAndUpdate(id, req.body, { new: true });
+    res.json(result);
+  } catch (error) {
+    console.error('Error updating employee:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Delete
+app.delete('/delete/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await employeeModel.findByIdAndDelete(id);
+    res.send({ message: "Employee deleted" });
+  } catch (error) {
+    console.error('Error deleting employee:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
